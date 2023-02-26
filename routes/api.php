@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenericController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -31,9 +32,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/User',function(Request $request){
         return new UserCollection(User::paginate());
     });
-    Route::post('/User/{user}',function(Request $request,User $user){
-        return new UserResource($user);
-    });
+    Route::post('/setting',[SettingsController::class,'groups']);
 
     Route::post('/query',[GenericController::class,'getAll']);
 });
