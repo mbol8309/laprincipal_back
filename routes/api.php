@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GenericController;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +21,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('/auth')->group(function(){
+    Route::post('/login',[AuthController::class,'login']);
+});
+
+Route::middleware('auth:sanctum')->group(function(){
+    Route::post('/User',function(Request $request){
+        return new UserCollection(User::paginate());
+    });
+    Route::post('/User/{user}',function(Request $request,User $user){
+        return new UserResource($user);
+    });
+
+    Route::post('/query',[GenericController::class,'getAll']);
 });
