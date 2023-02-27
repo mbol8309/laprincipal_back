@@ -32,7 +32,12 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/User',function(Request $request){
         return new UserCollection(User::paginate());
     });
-    Route::post('/setting',[SettingsController::class,'groups']);
+
+    Route::prefix('/setting')->group(function(){
+        Route::get('/',[SettingsController::class,'groups']);
+        Route::get('/{group}',[SettingsController::class,'items'])->whereAlpha('group');
+    });
+
 
     Route::post('/query',[GenericController::class,'getAll']);
 });

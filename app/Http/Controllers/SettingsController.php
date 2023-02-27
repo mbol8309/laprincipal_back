@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Settings;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Spatie\LaravelSettings\Settings;
 
 class SettingsController extends Controller
 {
     public function groups(Request $request)
     {
-        $groups = DB::select("select `group`,max(id) 'id' from settings group by `group`"); //TODO: Find another way
         return [
-            "data"=>$groups
+            "data" => Settings::groups(),
+        ];
+    }
+
+    public function items(string $group, Request $request)
+    {
+        $items = Settings::items($group)->toArray();
+        $items = array_reduce($items, function ($prev, $current) {
+            $prev[$current['name']] = $current;
+            return $prev;
+        }, []);
+        return [
+            "data" => [
+                "id" => $group,
+                ...$items],
         ];
     }
 }

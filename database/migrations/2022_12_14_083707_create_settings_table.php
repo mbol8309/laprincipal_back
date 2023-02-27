@@ -13,10 +13,8 @@ return new class extends Migration
 
             $table->string('group')->index();
             $table->string('name');
-            $table->boolean('locked');
+            $table->string('type');
             $table->json('payload');
-
-            $table->timestamps();
         });
     }
 
