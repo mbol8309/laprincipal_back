@@ -8,15 +8,13 @@ use Illuminate\Http\Request;
 class GenericController extends Controller
 {
     //use AuthorizesRequests, ValidatesRequests;
-    protected $model;
 
-    public function __construct($model = null)
+    public function __construct()
     {
-        $this->model = $model;
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Dynamic get all elements in model.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -24,28 +22,17 @@ class GenericController extends Controller
     public function getAll(Request $request)
     {
         //return response()->json($model);
-        $model = $this->model;
-        if ($model == null) {
-            $modelName = $request->input('model');
-            $modelClass = '\\App\\Models\\' . $modelName;
-            $model = new $modelClass;
-        }
-        if ($model == null) {
-            throw new Exception("Model not found");
-        }
+        $model = $this->GetModelFromRequest($request);
 
         $query = $model->query();
 
         // Obtener los modelos relacionados a cargar
         if ($request->has('with')) {
-            $with = $request->with; //$request->get('with', []);
-
+            $with = $request->with;
             if (!empty($with)) {
-
                 foreach ($with as $modelW) {
                     if (method_exists($model, $modelW)) {
                         $query = $query->with($modelW);
-                        dump($query);exit;
                     } else {
                         throw new Exception("Relation not exist: " . $modelW);
                     }
@@ -57,11 +44,11 @@ class GenericController extends Controller
         // Filters
         if ($request->has('filters')) {
             $filters = $request->filters; // json_decode($request->filters, true);
-            $query = $this->applyFilters($model, $filters);
+            $query = $this->applyFilters($model, $filters, $query);
         }
 
         // Pagination
-        $perPage = $request->has('per_page') ? intval($request->per_page) : 10;
+        $perPage = $request->has('per_page') ? intval($request->per_page) : 2000;
         $page = $request->has('page') ? intval($request->page) : 1;
         $skip = ($page - 1) * $perPage;
         $total = $query->count();
@@ -75,10 +62,46 @@ class GenericController extends Controller
         ]);
     }
 
-    /**************filter generico con N niveles de relacion**/
-    protected function applyFilters($model, $filters)
+    /**
+     * Dynamic get element by id.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getById(Request $request)
     {
-        $query = $model->query();
+        //return response()->json($model);
+        $model = $this->GetModelFromRequest($request);
+
+        $id = null;
+        if ($request->has('id')) {
+            $id = $request->id;
+        }
+        if ($id == null) {$this->ThrowGenericEx("Id not found");}
+
+        $data = null;
+        // Obtener los modelos relacionados a cargar
+        if ($request->has('with')) {
+            $with = $request->with;
+            if (!empty($with)) {
+                $data = $model->with($with)->findOrFail($id);
+            }
+        }
+        if ($data == null) {
+            $data = $model->findOrFail($id);
+        }
+        if ($data == null) {$this->ThrowGenericEx("Entity not found");}
+
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+
+    /*PRIVATE FUNCTIONS */
+    /**************filter generico con N niveles de relacion**/
+    private function applyFilters($model, $filters, $query)
+    {
+        //$query = $model->query();
 
         foreach ($filters as $field => $value) {
             if (strpos($field, '.') !== false) {
@@ -126,4 +149,24 @@ class GenericController extends Controller
 
         return $query;
     }
+
+    private function GetModelFromRequest($request)
+    {
+        $model = null;
+        if ($request->has('model')) {
+            $modelName = $request->input('model');
+            $modelClass = '\\App\\Models\\' . $modelName;
+            $model = new $modelClass;
+        }
+        if ($model == null) {$this->ThrowGenericEx("Model not found");}
+        return $model;
+    }
+
+    private function ThrowGenericEx($msg)
+    {
+        throw new Exception($msg);
+    }
+
+    /*END PRIVATE FUNCTIONS */
+
 }

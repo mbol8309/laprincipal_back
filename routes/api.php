@@ -29,15 +29,14 @@ Route::prefix('/auth')->group(function(){
 });
 
 Route::middleware('auth:sanctum')->group(function(){
-    Route::post('/User',function(Request $request){
-        return new UserCollection(User::paginate());
-    });
 
     Route::prefix('/setting')->group(function(){
         Route::get('/',[SettingsController::class,'groups']);
         Route::get('/{group}',[SettingsController::class,'items'])->whereAlpha('group');
+        Route::post('/{group}',[SettingsController::class,'store_items'])->whereAlpha('group');
     });
 
 
-    Route::post('/query',[GenericController::class,'getAll']);
+    Route::post('/getAll',[GenericController::class,'getAll']);
+    Route::post('/getById',[GenericController::class,'getById']);
 });

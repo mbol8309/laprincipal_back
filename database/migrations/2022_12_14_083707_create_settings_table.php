@@ -13,6 +13,7 @@ return new class extends Migration
 
             $table->string('group')->index();
             $table->string('name');
+            $table->string('label');
             $table->string('type');
             $table->json('payload');
         });
