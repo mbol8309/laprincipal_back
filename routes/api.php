@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FrontController;
 use App\Http\Controllers\GenericController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Resources\UserCollection;
@@ -40,3 +41,5 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/getAll',[GenericController::class,'getAll']);
     Route::post('/getById',[GenericController::class,'getById']);
 });
+
+Route::get('/front/{item}',[FrontController::class,'show']);
