@@ -1,0 +1,21 @@
+{
+    "type":"simple",
+    "items":[
+        {
+            "id":"name",
+            "type":"textfield"
+        },
+        {
+            "id":"email",
+            "type":"emailfield"
+        },
+        {
+            "id":"email_verified_at",
+            "type":"datetimefield"
+        },
+        {
+            "id":"created_at",
+            "type":"datetimefield"
+        }
+    ]
+}

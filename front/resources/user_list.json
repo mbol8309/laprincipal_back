@@ -1,0 +1,22 @@
+{
+    "type":"datagrid",
+    "rowClick":"show",
+    "items":[
+        {
+            "id":"name",
+            "type":"textfield"
+        },
+        {
+            "id":"email",
+            "type":"emailfield"
+        },
+        {
+            "id":"email_verified_at",
+            "type":"datefield"
+        },
+        {
+            "id":"created_at",
+            "type":"datefield"
+        }
+    ]
+}

@@ -1,8 +1,16 @@
 [
     {
-        "id": "user"
+        "id": "user",
+        "list":"generic",
+        "show":"generic",
+        "edit":"generic",
+        "create":"generic"
     },
     {
-        "id": "setting"
+        "id": "setting",
+        "list":"custom",
+        "show":"",
+        "edit":"",
+        "create":""
     }
 ]

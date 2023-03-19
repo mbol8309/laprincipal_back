@@ -25,7 +25,7 @@ $files = array_map(fn ($str) => substr($str, $length), $files);
 $files = array_reduce($files, function ($carry, $item) use ($front_dir) {
     $path = $front_dir . $item;
     $item = substr($item, 0, -5);
-    $item = str_replace(DIRECTORY_SEPARATOR, '.', $item);
+    $item = str_replace(DIRECTORY_SEPARATOR, '-', $item);
     $carry[$item] = $path;
     return $carry;
 }, []);
