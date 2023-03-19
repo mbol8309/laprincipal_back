@@ -9,9 +9,13 @@ php artisan vendor:publish --tag=reliese-models
 # Let's refresh our config cache just in case
 php artisan config:clear
 
-## Generar modelos a partir de la base de datos:
+## Generar modelos a partir de la base de datos, antes de ejecutar este comando se debe excluir las tablas que no se desee importar en el fichero "config\models.php", por ejemplo "'migrations','users','settings','password_reset_tokens','personal_access_tokens','failed_jobs'":
 php artisan code:models
 
+## Como nomenclatura de las tablas tendremos lo siguiente:
+- sin prefijo: tablas por defecto de laravel
+- prefijo "sys_": tablas del sistema (users, logs, roles, etc)
+- prefijo "bs_": tablas del negocio
 
 # Json call example:
 /generic/getAll

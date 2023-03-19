@@ -280,7 +280,7 @@ return [
         */
 
         'except' => [
-            'migrations','users','settings','password_reset_tokens','personal_access_tokens','failed_jobs'
+            'migrations','users','settings','password_reset_tokens','personal_access_tokens','failed_jobs','sys_*'
         ],
 
         /*
@@ -307,7 +307,7 @@ return [
         |
         */
 
-        'table_prefix' => '',
+        'table_prefix' => 'bs_',
 
         /*
         |--------------------------------------------------------------------------
@@ -399,7 +399,7 @@ return [
         | You can disable pluralization tables and relations
         |
         */
-        'pluralize' => true,
+        'pluralize' => false,
 
         /*
         |--------------------------------------------------------------------------
