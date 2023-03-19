@@ -1,9 +1,17 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Libro;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 
 class GenericController extends Controller
 {
@@ -19,11 +27,13 @@ class GenericController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getAll(Request $request)
+    public function getAll(Request $request, $internCall=false)
     {
         //return response()->json($model);
         $model = $this->GetModelFromRequest($request);
-
+        if($internCall==false){
+            $res = $this->ExecControllerFunction($this->GetModelNameFromRequest($request),'getAll',$request);
+        }
         $query = $model->query();
 
         // Obtener los modelos relacionados a cargar
@@ -33,10 +43,7 @@ class GenericController extends Controller
                 foreach ($with as $modelW) {
                     if (method_exists($model, $modelW)) {
                         $query = $query->with($modelW);
-                    } else {
-                        throw new Exception("Relation not exist: " . $modelW);
-                    }
-
+                    } else throw new Exception("Relation not exist: " . $modelW);
                 }
             }
         }
@@ -58,9 +65,10 @@ class GenericController extends Controller
             'data' => $data,
             'total' => $total,
             'per_page' => $perPage,
-            'current_page' => $page,
+            'current_page' => $page
         ]);
     }
+
 
     /**
      * Dynamic get element by id.
@@ -77,7 +85,9 @@ class GenericController extends Controller
         if ($request->has('id')) {
             $id = $request->id;
         }
-        if ($id == null) {$this->ThrowGenericEx("Id not found");}
+        if ($id == null) {
+            $this->ThrowGenericEx("Id not found");
+        }
 
         $data = null;
         // Obtener los modelos relacionados a cargar
@@ -90,15 +100,57 @@ class GenericController extends Controller
         if ($data == null) {
             $data = $model->findOrFail($id);
         }
-        if ($data == null) {$this->ThrowGenericEx("Entity not found");}
+        if ($data == null) {
+            $this->ThrowGenericEx("Entity not found");
+        }
 
         return response()->json([
-            'data' => $data,
+            'data' => $data
         ]);
     }
 
+    public function insert(Request $request)
+    {
+        // Obtener el nombre de la clase del modelo a partir del nombre del controlador
+        //$modelClass = 'App\\Models\\' . str_replace('Controller', '', class_basename(get_class($this)));
+        $model = $this->GetModelFromRequest($request);
+
+        // Obtener las reglas de validación del modelo
+        $rules = $this->getValidationRules($model);
+
+        if ($rules != null) {
+            // Validar los datos del formulario
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $this->ThrowGenericEx("Validation KO");
+            }
+        }
+
+        //obtener data para insertar
+        $data = null;
+        if ($request->has('data')) {
+            if (!empty($request->data)) {
+                $data = $request->data;
+            }
+        }
+
+        if ($data != null) {
+            // Asignar los datos al modelo
+            $model->fill($data);
+            //dump($model);exit;
+            $model->save();
+        }
+
+        return response()->json([
+            'data' => $model,
+            'success' => true
+        ]);
+        //return response()->json(['message' => 'Registro creado con éxito', 'data' => $model], 201);
+    }
+
     /*PRIVATE FUNCTIONS */
-    /**************filter generico con N niveles de relacion**/
+    /***************filter generico con N niveles de relacion***/
     private function applyFilters($model, $filters, $query)
     {
         //$query = $model->query();
@@ -150,15 +202,28 @@ class GenericController extends Controller
         return $query;
     }
 
+    private function GetModelNameFromRequest($request)
+    {
+        $modelName = null;
+        if ($request->has('model')) {
+            $modelName = $request->input('model');
+        }
+        return $modelName;
+    }
+
     private function GetModelFromRequest($request)
     {
         $model = null;
         if ($request->has('model')) {
-            $modelName = $request->input('model');
-            $modelClass = '\\App\\Models\\' . $modelName;
-            $model = new $modelClass;
+            $modelName = $this->GetModelNameFromRequest($request);
+            if($modelName!=null){
+                $modelClass = '\\App\\Models\\' . $modelName;
+                $model = new $modelClass;
+            }
         }
-        if ($model == null) {$this->ThrowGenericEx("Model not found");}
+        if ($model == null) {
+            $this->ThrowGenericEx("Model not found");
+        }
         return $model;
     }
 
@@ -167,6 +232,59 @@ class GenericController extends Controller
         throw new Exception($msg);
     }
 
-    /*END PRIVATE FUNCTIONS */
+    private function getValidationRules($modelName)
+    {
+        $rules = null;
 
+        if (Schema::hasTable('validation_rules')) {
+            $rules = [];
+            // Obtener las reglas de validación de la tabla 'validation_rules'
+            $validationRules = DB::table('validation_rules')
+                ->where('model_name', '=', $modelName)
+                ->get();
+
+            /*dump($validationRules);
+            exit;*/
+
+            // Agrupar las reglas por campo
+            $groupedRules = $validationRules->groupBy('field_name');
+
+            // Construir el array de reglas
+            foreach ($groupedRules as $fieldName => $rulesForField) {
+                $fieldRules = [];
+                foreach ($rulesForField as $rule) {
+                    if ($rule->rule_parameters) {
+                        $fieldRules[$rule->rule_name] = explode(',', $rule->rule_parameters);
+                    } else {
+                        $fieldRules[] = $rule->rule_name;
+                    }
+                }
+                $rules[$fieldName] = $fieldRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    private function ExecControllerFunction($model,$functionName,$request)
+    {
+        $controllerName = ucfirst($model) . 'Controller';
+        $fullControllerName = 'App\\Http\\Controllers\\' . $controllerName;
+        if (class_exists($fullControllerName)) {
+            $obj = new $fullControllerName();
+            if (method_exists($obj, $functionName)) {
+                $result = call_user_func_array(array($obj, $functionName), ['request'=>$request]);
+                return 1;
+            } else {
+                // El método no existe en el controlador
+                return -2;
+            }
+        } else {
+            // El controlador no existe
+            return -1;
+        }
+    }
+
+
+    /*END PRIVATE FUNCTIONS */
 }

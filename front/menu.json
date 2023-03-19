@@ -21,6 +21,12 @@
         ]
     },
     {
+        "id": "book",
+        "label": "Books",
+        "route": "/book",
+        "icon": "Book"
+    },
+    {
         "id": "settings",
         "label": "Settings",
         "route": "/setting",
