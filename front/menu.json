@@ -1,16 +1,29 @@
 [
     {
-        "id":"users",
-        "name":"Users",
-        "label":"Users",
-        "route":"/users",
-        "icon":"Person"
+        "id": "users_groups",
+        "label": "Users & Roles",
+        "route": "/users",
+        "icon": "Person",
+        "children": [
+            {
+                "id": "users",
+                "label": "Users",
+                "route": "/user",
+                "icon": "Person",
+                "props": {
+                    "style": {
+                        "&:hover": {
+                            "backgroundColor": "blue"
+                        }
+                    }
+                }
+            }
+        ]
     },
     {
-        "id":"settings",
-        "name":"Settings",
-        "label":"Settings",
-        "route":"/settings",
-        "icon":"Settings"
+        "id": "settings",
+        "label": "Settings",
+        "route": "/setting",
+        "icon": "Settings"
     }
 ]

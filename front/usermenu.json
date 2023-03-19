@@ -1,0 +1,8 @@
+[
+    {
+        "id": "profile",
+        "label": "Profile, {user_name}",
+        "route": "/user/{user_id}",
+        "icon": "Person"
+    }
+]
