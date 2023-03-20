@@ -256,8 +256,10 @@ class GenericController extends Controller
         if ($request->has('model')) {
             $modelName = $this->GetModelNameFromRequest($request);
             if($modelName!=null){
-                $modelClass = '\\App\\Models\\' . $modelName;
-                $model = new $modelClass;
+                $modelClass = '\\App\\Models\\'.ucfirst($modelName);
+                if(class_exists($modelClass)) {
+                    $model = new $modelClass;
+                }
             }
         }
         if ($model == null) {
