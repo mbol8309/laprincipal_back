@@ -12,5 +12,12 @@
         "show":"",
         "edit":"",
         "create":""
+    },
+    {
+        "id": "book",
+        "list":"generic",
+        "show":"generic",
+        "edit":"generic",
+        "create":"generic"
     }
 ]

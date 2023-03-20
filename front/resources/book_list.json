@@ -1,0 +1,22 @@
+{
+    "type":"datagrid",
+    "rowClick":"show",
+    "items":[
+        {
+            "id":"title",
+            "type":"textfield"
+        },
+        {
+            "id":"author",
+            "type":"textfield"
+        },
+        {
+            "id":"genre",
+            "type":"textfield"
+        },
+        {
+            "id":"publication_date",
+            "type":"datefield"
+        }
+    ]
+}

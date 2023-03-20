@@ -69,7 +69,6 @@ class GenericController extends Controller
         ]);
     }
 
-
     /**
      * Dynamic get element by id.
      *
@@ -147,6 +146,46 @@ class GenericController extends Controller
             'success' => true
         ]);
         //return response()->json(['message' => 'Registro creado con éxito', 'data' => $model], 201);
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $model = $this->GetModelFromRequest($request);
+            $id = $request->has('id')?$request->id:null;
+            if($id==null){$this->ThrowGenericEx("Id is not valid");}
+            $data = $model->findOrFail($id);
+            $data->delete();
+            return response()->json(['message' => 'Resource deleted']);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Resource not found'], 404);
+        }
+    }
+
+    public function updateById(Request $request)
+    {
+        try {
+            $model = $this->GetModelFromRequest($request);
+            $id = $request->has('id')?$request->id:null;
+            if($id==null){$this->ThrowGenericEx("Id is not valid");}
+
+            $entity = $model->findOrFail($id);
+
+            $data = null;
+            if ($request->has('data')) {
+                if (!empty($request->data)) {
+                    $data = $request->data;
+                }
+            }
+
+            if ($data != null) {
+                $entity->update($data);
+            }
+
+            return response()->json(['data' => $entity]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Resource not found'], 404);
+        }
     }
 
     /*PRIVATE FUNCTIONS */
@@ -236,10 +275,10 @@ class GenericController extends Controller
     {
         $rules = null;
 
-        if (Schema::hasTable('validation_rules')) {
+        if (Schema::hasTable('sys_validation_rules')) {
             $rules = [];
             // Obtener las reglas de validación de la tabla 'validation_rules'
-            $validationRules = DB::table('validation_rules')
+            $validationRules = DB::table('sys_validation_rules')
                 ->where('model_name', '=', $modelName)
                 ->get();
 
