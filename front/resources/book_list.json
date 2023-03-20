@@ -18,5 +18,17 @@
             "id":"publication_date",
             "type":"datefield"
         }
+    ],
+    "filters":[
+        {
+            "id":"title",
+            "label":"Title",
+            "type":"textfield"
+        },
+        {
+            "id":"author",
+            "label":"Author",
+            "type":"textfield"
+        }
     ]
 }

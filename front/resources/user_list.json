@@ -4,19 +4,35 @@
     "items":[
         {
             "id":"name",
+            "type":"textfield",
+            "sort":true
+        },
+        {
+            "id":"email",
+            "type":"emailfield",
+            "sort":true
+        },
+        {
+            "id":"email_verified_at",
+            "type":"datefield",
+            "sort":true
+        },
+        {
+            "id":"created_at",
+            "type":"datefield",
+            "sort":true
+        }
+    ],
+    "filters":[
+        {
+            "id":"name",
+            "label":"Name",
             "type":"textfield"
         },
         {
             "id":"email",
-            "type":"emailfield"
-        },
-        {
-            "id":"email_verified_at",
-            "type":"datefield"
-        },
-        {
-            "id":"created_at",
-            "type":"datefield"
+            "label":"Email",
+            "type":"textfield"
         }
     ]
 }
