@@ -54,6 +54,17 @@ class GenericController extends Controller
             $query = $this->applyFilters($model, $filters, $query);
         }
 
+        // Sort
+        if ($request->has('sort_by')) {
+            $sort_by = $request->input('sort_by');
+            $orden = substr($sort_by, -3) == 'asc' ? 'asc' : 'desc';
+            $campo = substr($sort_by, 0, -4);
+            if (!Schema::hasColumn($model->getTable(), $campo)) {
+                throw new Exception("No existe el campo $campo en la tabla " . $model->getTable());
+            }
+            $query->orderBy($campo, $orden);
+        }
+
         // Pagination
         $perPage = $request->has('per_page') ? intval($request->per_page) : 2000;
         $page = $request->has('page') ? intval($request->page) : 1;
