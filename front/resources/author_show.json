@@ -1,0 +1,13 @@
+{
+    "type":"simple",
+    "items":[
+        {
+            "id":"first_name",
+            "type":"textfield"
+        },
+        {
+            "id":"last_name",
+            "type":"textfield"
+        }
+    ]
+}

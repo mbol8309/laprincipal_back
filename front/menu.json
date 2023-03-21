@@ -21,10 +21,24 @@
         ]
     },
     {
-        "id": "book",
-        "label": "Books",
+        "id": "book_authors",
+        "label": "Books & Authors",
         "route": "/book",
-        "icon": "Book"
+        "icon": "Book",
+        "children": [
+            {
+                "id": "book",
+                "label": "Books",
+                "route": "/book",
+                "icon": "Book"
+            },
+            {
+                "id": "author",
+                "label": "Authors",
+                "route": "/author",
+                "icon": "Person"
+            }
+        ]
     },
     {
         "id": "settings",

@@ -3,19 +3,23 @@
     "items":[
         {
             "id":"title",
-            "type":"textfield"
+            "type":"textfield",
+            "label":"Titulo"
         },
         {
-            "id":"author",
-            "type":"textfield"
+            "id":"author_id",
+            "type":"textfield",
+            "label":"Autor"
         },
         {
             "id":"genre",
-            "type":"textfield"
+            "type":"textfield",
+            "label":"Genero"
         },
         {
             "id":"publication_date",
-            "type":"datefield"
+            "type":"datefield",
+            "label":"Fecha publicacion"
         }
     ]
 }

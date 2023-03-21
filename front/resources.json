@@ -19,5 +19,13 @@
         "show":"generic",
         "edit":"generic",
         "create":"generic"
+    },
+    {
+        "id": "author",
+        "list":"generic",
+        "show":"generic",
+        "edit":"generic",
+        "create":"generic",
+        "representation": "${record.first_name} ${record.last_name}"
     }
 ]

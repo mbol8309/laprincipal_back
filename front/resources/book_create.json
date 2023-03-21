@@ -6,7 +6,7 @@
             "type":"textfield"
         },
         {
-            "id":"author",
+            "id":"author_id",
             "type":"textfield"
         },
         {

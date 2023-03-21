@@ -57,8 +57,9 @@ class GenericController extends Controller
         // Sort
         if ($request->has('sort_by')) {
             $sort_by = $request->input('sort_by');
-            $orden = substr($sort_by, -3) == 'asc' ? 'asc' : 'desc';
-            $campo = substr($sort_by, 0, -4);
+            $sort_by = explode(' ',$sort_by);
+            $orden = strtolower($sort_by[1]) == 'asc' ? 'asc' : 'desc';
+            $campo = strtolower($sort_by[0]);
             if (!Schema::hasColumn($model->getTable(), $campo)) {
                 throw new Exception("No existe el campo $campo en la tabla " . $model->getTable());
             }

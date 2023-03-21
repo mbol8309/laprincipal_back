@@ -14,11 +14,13 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property string $title
- * @property string $author
  * @property string|null $genre
  * @property Carbon|null $publication_date
  * @property string|null $publisher
  * @property string|null $description
+ * @property int|null $author_id
+ * 
+ * @property Author|null $author
  *
  * @package App\Models
  */
@@ -28,15 +30,21 @@ class Book extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'publication_date' => 'date'
+		'publication_date' => 'date',
+		'author_id' => 'int'
 	];
 
 	protected $fillable = [
 		'title',
-		'author',
 		'genre',
 		'publication_date',
 		'publisher',
-		'description'
+		'description',
+		'author_id'
 	];
+
+	public function author()
+	{
+		return $this->belongsTo(Author::class);
+	}
 }
