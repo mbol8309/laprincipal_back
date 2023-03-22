@@ -18,7 +18,8 @@
         "list":"generic",
         "show":"generic",
         "edit":"generic",
-        "create":"generic"
+        "create":"generic",
+        "representation": "${record.title}"
     },
     {
         "id": "author",

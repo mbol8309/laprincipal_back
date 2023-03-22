@@ -8,6 +8,13 @@
         {
             "id":"last_name",
             "type":"textfield"
+        },
+        {
+            "id":"author_id",
+            "type":"reference_many",
+            "reference":"book",
+            "label":"Libros",
+            "sort":true
         }
     ]
 }

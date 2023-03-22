@@ -13,6 +13,18 @@
             "type":"textfield",
             "label":"Apellidos",
             "sort":true
+        },
+        {
+            "id":"author_id",
+            "type":"reference_many",
+            "reference":"book",
+            "label":"Libros",
+            "render":{
+                "type":"single",
+                "source":"title",
+                "component":"chip"
+            },
+            "sort":true
         }
     ],
     "filters":[

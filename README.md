@@ -67,3 +67,33 @@ CREATE TABLE validation_rules (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE bs_genre (
+  id INT PRIMARY KEY,
+  genre_name VARCHAR(50) NOT NULL
+);
+
+INSERT INTO bs_genre (genre_id, genre_name)
+VALUES
+  (1, 'Ficción'),
+  (2, 'No ficción'),
+  (3, 'Ciencia ficción'),
+  (4, 'Misterio'),
+  (5, 'Romance'),
+  (6, 'Aventura'),
+  (7, 'Historia'),
+  (8, 'Biografía'),
+  (9, 'Fantasía'),
+  (10, 'Terror');
+
+CREATE TABLE bs_book_genre (
+  book_id INT,
+  genre_id INT,
+  PRIMARY KEY (book_id, genre_id),
+  FOREIGN KEY (book_id) REFERENCES bs_book (id),
+  FOREIGN KEY (genre_id) REFERENCES bs_genre (id)
+);
+
+ALTER TABLE bs_book DROP COLUMN genre;
+
+
+
