@@ -120,6 +120,45 @@ class GenericController extends Controller
         ]);
     }
 
+    /**
+     * Dynamic get element by id.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getByIds(Request $request)
+    {
+        //return response()->json($model);
+        $model = $this->GetModelFromRequest($request);
+
+        $ids = [];
+        if ($request->has('ids')) {
+            $ids = $request->ids;
+        }
+        if ($ids == null) {
+            $this->ThrowGenericEx("Id not found");
+        }
+
+        $data = null;
+        // Obtener los modelos relacionados a cargar
+        if ($request->has('with')) {
+            $with = $request->with;
+            if (!empty($with)) {
+                $data = $model->with($with)->whereIn('id',$ids)->get();
+            }
+        }
+        if ($data == null) {
+            $data = $model->whereIn('id',$ids)->get();
+        }
+        if ($data == null) {
+            $this->ThrowGenericEx("Entity not found");
+        }
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+
     public function insert(Request $request)
     {
         // Obtener el nombre de la clase del modelo a partir del nombre del controlador

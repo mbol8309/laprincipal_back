@@ -26,6 +26,6 @@
         "show":"generic",
         "edit":"generic",
         "create":"generic",
-        "representation": "${record.first_name} ${record.last_name}"
+        "representation": "${record.first_name} ${record.last_name}[${record.id}]"
     }
 ]
