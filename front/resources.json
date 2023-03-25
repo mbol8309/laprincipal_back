@@ -15,6 +15,14 @@
         "representation": "${record.name}"
     },
     {
+        "id": "role",
+        "list":"generic",
+        "show":"generic",
+        "edit":"generic",
+        "create":"generic",
+        "representation": "${record.name}"
+    },
+    {
         "id": "setting",
         "list":"custom",
         "show":"",

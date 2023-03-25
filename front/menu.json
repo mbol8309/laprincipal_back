@@ -3,7 +3,7 @@
         "id": "users_groups",
         "label": "Users & Groups",
         "route": "/users",
-        "icon": "Person",
+        "icon": "Group",
         "children": [
             {
                 "id": "users",
@@ -15,7 +15,21 @@
                 "id": "group",
                 "label": "Groups",
                 "route": "/group",
-                "icon": "Person"
+                "icon": "Group"
+            }
+        ]
+    },
+    {
+        "id": "role_permision",
+        "label": "Roles & Permission",
+        "route": "/users",
+        "icon": "AdminPanelSettings",
+        "children": [
+            {
+                "id": "roles",
+                "label": "Roles",
+                "route": "/role",
+                "icon": "Group"
             }
         ]
     },

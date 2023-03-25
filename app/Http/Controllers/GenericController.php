@@ -314,7 +314,7 @@ class GenericController extends Controller
             }
         }
         if ($model == null) {
-            $this->ThrowGenericEx("Model not found");
+            $this->ThrowGenericEx("Model not found ($modelName)");
         }
         return $model;
     }
