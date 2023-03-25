@@ -1,20 +1,31 @@
 {
-    "type":"simple",
-    "items":[
+    "type": "simple",
+    "items": [
         {
-            "id":"first_name",
-            "type":"textfield"
+            "id": "first_name",
+            "type": "textfield"
         },
         {
-            "id":"last_name",
-            "type":"textfield"
+            "id": "last_name",
+            "type": "textfield"
         },
         {
-            "id":"author_id",
-            "type":"reference_many",
-            "reference":"book",
-            "label":"Libros",
-            "sort":true
+            "id": "author_id",
+            "type": "reference_many",
+            "reference": "book",
+            "label": "Libros",
+            "sort": true,
+            "render": {
+                "type": "datagrid",
+                "items": [
+                    {
+                        "id": "title",
+                        "type": "textfield",
+                        "label": "Titulo",
+                        "sort": true
+                    }
+                ]
+            }
         }
     ]
 }

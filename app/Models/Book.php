@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,13 +15,13 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property string $title
- * @property string|null $genre
  * @property Carbon|null $publication_date
  * @property string|null $publisher
  * @property string|null $description
  * @property int|null $author_id
  * 
  * @property Author|null $author
+ * @property Collection|Genre[] $genre
  *
  * @package App\Models
  */
@@ -36,7 +37,6 @@ class Book extends Model
 
 	protected $fillable = [
 		'title',
-		'genre',
 		'publication_date',
 		'publisher',
 		'description',
@@ -46,5 +46,10 @@ class Book extends Model
 	public function author()
 	{
 		return $this->belongsTo(Author::class);
+	}
+
+	public function genre()
+	{
+		return $this->belongsToMany(Genre::class, 'bs_book_genre');
 	}
 }

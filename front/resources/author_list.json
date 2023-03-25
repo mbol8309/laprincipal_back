@@ -1,5 +1,6 @@
 {
     "type":"datagrid",
+    "bulkActions":true,
     "rowClick":"show",
     "items":[
         {
