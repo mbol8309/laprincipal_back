@@ -30,6 +30,12 @@
                 "label": "Roles",
                 "route": "/role",
                 "icon": "Group"
+            },
+            {
+                "id": "permission",
+                "label": "Permissions",
+                "route": "/permission",
+                "icon": "Key"
             }
         ]
     },
