@@ -6,8 +6,15 @@
             "type":"textfield"
         },
         {
-            "id":"email",
-            "type":"emailfield"
+            "id":"description",
+            "type":"textfield"
+        },
+        {
+            "id": "group_id",
+            "type": "reference",
+            "reference": "group",
+            "label": "Group",
+            "sort": true
         }
     ]
 }

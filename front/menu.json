@@ -1,7 +1,7 @@
 [
     {
         "id": "users_groups",
-        "label": "Users & Roles",
+        "label": "Users & Groups",
         "route": "/users",
         "icon": "Person",
         "children": [
@@ -9,14 +9,13 @@
                 "id": "users",
                 "label": "Users",
                 "route": "/user",
-                "icon": "Person",
-                "props": {
-                    "style": {
-                        "&:hover": {
-                            "backgroundColor": "blue"
-                        }
-                    }
-                }
+                "icon": "Person"
+            },
+            {
+                "id": "group",
+                "label": "Groups",
+                "route": "/group",
+                "icon": "Person"
             }
         ]
     },

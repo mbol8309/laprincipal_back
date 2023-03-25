@@ -16,7 +16,7 @@
             "label": "Libros",
             "sort": true,
             "render": {
-                "type": "datagrid",
+                "type": "iterator",
                 "items": [
                     {
                         "id": "title",

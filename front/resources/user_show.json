@@ -10,6 +10,14 @@
             "type":"emailfield"
         },
         {
+            "id": "group_id",
+            "type": "reference",
+            "reference": "group",
+            "label": "Group",
+            "sort": true,
+            "empty": "Ninguno"
+        },
+        {
             "id":"email_verified_at",
             "type":"datefield"
         },

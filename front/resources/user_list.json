@@ -1,38 +1,46 @@
 {
-    "type":"datagrid",
-    "rowClick":"show",
-    "items":[
+    "type": "datagrid",
+    "rowClick": "show",
+    "items": [
         {
-            "id":"name",
-            "type":"textfield",
-            "sort":true
+            "id": "name",
+            "type": "textfield",
+            "sort": true
         },
         {
-            "id":"email",
-            "type":"emailfield",
-            "sort":true
+            "id": "email",
+            "type": "emailfield",
+            "sort": true
         },
         {
-            "id":"email_verified_at",
-            "type":"datefield",
-            "sort":true
+            "id": "group_id",
+            "type": "reference",
+            "reference": "group",
+            "label": "Group",
+            "sort": true,
+            "empty": "-"
         },
         {
-            "id":"created_at",
-            "type":"datefield",
-            "sort":true
+            "id": "email_verified_at",
+            "type": "datefield",
+            "sort": true
+        },
+        {
+            "id": "created_at",
+            "type": "datefield",
+            "sort": true
         }
     ],
-    "filters":[
+    "filters": [
         {
-            "id":"name",
-            "label":"Name",
-            "type":"textfield"
+            "id": "name",
+            "label": "Name",
+            "type": "textfield"
         },
         {
-            "id":"email",
-            "label":"Email",
-            "type":"textfield"
+            "id": "email",
+            "label": "Email",
+            "type": "textfield"
         }
     ]
 }

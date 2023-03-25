@@ -7,6 +7,14 @@
         "create":"generic"
     },
     {
+        "id": "group",
+        "list":"generic",
+        "show":"generic",
+        "edit":"generic",
+        "create":"generic",
+        "representation": "${record.name}"
+    },
+    {
         "id": "setting",
         "list":"custom",
         "show":"",

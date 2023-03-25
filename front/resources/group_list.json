@@ -1,0 +1,22 @@
+{
+    "type":"datagrid",
+    "rowClick":"show",
+    "items":[
+        {
+            "id":"name",
+            "type":"textfield",
+            "sort":true
+        },
+        {
+            "id":"description",
+            "type":"textareafield"
+        }
+    ],
+    "filters":[
+        {
+            "id":"name",
+            "label":"Name",
+            "type":"textfield"
+        }
+    ]
+}
