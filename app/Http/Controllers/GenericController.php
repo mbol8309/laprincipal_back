@@ -27,12 +27,12 @@ class GenericController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getAll(Request $request, $internCall=false)
+    public function getAll(Request $request, $internCall = false)
     {
         //return response()->json($model);
         $model = $this->GetModelFromRequest($request);
-        if($internCall==false){
-            $res = $this->ExecControllerFunction($this->GetModelNameFromRequest($request),'getAll',$request);
+        if ($internCall == false) {
+            $res = $this->ExecControllerFunction($this->GetModelNameFromRequest($request), 'getAll', $request);
         }
         $query = $model->query();
 
@@ -57,7 +57,7 @@ class GenericController extends Controller
         // Sort
         if ($request->has('sort_by')) {
             $sort_by = $request->input('sort_by');
-            $sort_by = explode(' ',$sort_by);
+            $sort_by = explode(' ', $sort_by);
             $orden = strtolower($sort_by[1]) == 'asc' ? 'asc' : 'desc';
             $campo = strtolower($sort_by[0]);
             if (!Schema::hasColumn($model->getTable(), $campo)) {
@@ -144,11 +144,11 @@ class GenericController extends Controller
         if ($request->has('with')) {
             $with = $request->with;
             if (!empty($with)) {
-                $data = $model->with($with)->whereIn('id',$ids)->get();
+                $data = $model->with($with)->whereIn('id', $ids)->get();
             }
         }
         if ($data == null) {
-            $data = $model->whereIn('id',$ids)->get();
+            $data = $model->whereIn('id', $ids)->get();
         }
         if ($data == null) {
             $this->ThrowGenericEx("Entity not found");
@@ -165,23 +165,23 @@ class GenericController extends Controller
         //$modelClass = 'App\\Models\\' . str_replace('Controller', '', class_basename(get_class($this)));
         $model = $this->GetModelFromRequest($request);
 
+        //obtener data para insertar
+        $data = [];
+        if ($request->has('data')) {
+            if (!empty($request->data)) {
+                $data = $request->data;
+            }
+        }
+
         // Obtener las reglas de validación del modelo
         $rules = $this->getValidationRules($model);
 
         if ($rules != null) {
             // Validar los datos del formulario
-            $validator = Validator::make($request->all(), $rules);
+            $validator = Validator::make($data, $rules);
 
             if ($validator->fails()) {
-                $this->ThrowGenericEx("Validation KO");
-            }
-        }
-
-        //obtener data para insertar
-        $data = null;
-        if ($request->has('data')) {
-            if (!empty($request->data)) {
-                $data = $request->data;
+                return response()->json(['errors' => $validator->errors()], 422);
             }
         }
 
@@ -203,8 +203,10 @@ class GenericController extends Controller
     {
         try {
             $model = $this->GetModelFromRequest($request);
-            $id = $request->has('id')?$request->id:null;
-            if($id==null){$this->ThrowGenericEx("Id is not valid");}
+            $id = $request->has('id') ? $request->id : null;
+            if ($id == null) {
+                $this->ThrowGenericEx("Id is not valid");
+            }
             $data = $model->findOrFail($id);
             $data->delete();
             return response()->json(['message' => 'Resource deleted']);
@@ -217,8 +219,10 @@ class GenericController extends Controller
     {
         try {
             $model = $this->GetModelFromRequest($request);
-            $id = $request->has('id')?$request->id:null;
-            if($id==null){$this->ThrowGenericEx("Id is not valid");}
+            $id = $request->has('id') ? $request->id : null;
+            if ($id == null) {
+                $this->ThrowGenericEx("Id is not valid");
+            }
 
             $entity = $model->findOrFail($id);
 
@@ -226,6 +230,17 @@ class GenericController extends Controller
             if ($request->has('data')) {
                 if (!empty($request->data)) {
                     $data = $request->data;
+                }
+            }
+
+            $rules = $this->getValidationRules($model);
+
+            if ($rules != null) {
+                // Validar los datos del formulario
+                $validator = Validator::make($data, $rules);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
                 }
             }
 
@@ -306,9 +321,10 @@ class GenericController extends Controller
         $model = null;
         if ($request->has('model')) {
             $modelName = $this->GetModelNameFromRequest($request);
-            if($modelName!=null){
-                $modelClass = '\\App\\Models\\'.ucfirst($modelName);
-                if(class_exists($modelClass)) {
+            if ($modelName != null) {
+                $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $modelName))); // convert snake_case to PascalCase
+                $modelClass = '\\App\\Models\\' . $modelName;
+                if (class_exists($modelClass)) {
                     $model = new $modelClass;
                 }
             }
@@ -328,11 +344,11 @@ class GenericController extends Controller
     {
         $rules = null;
 
-        if (Schema::hasTable('sys_validation_rules')) {
+        if (Schema::hasTable('sys_validation_rule')) {
             $rules = [];
             // Obtener las reglas de validación de la tabla 'validation_rules'
-            $validationRules = DB::table('sys_validation_rules')
-                ->where('model_name', '=', $modelName)
+            $validationRules = DB::table('sys_validation_rule')
+                ->where('model_name', '=', get_class($modelName))
                 ->get();
 
             /*dump($validationRules);
@@ -358,14 +374,14 @@ class GenericController extends Controller
         return $rules;
     }
 
-    private function ExecControllerFunction($model,$functionName,$request)
+    private function ExecControllerFunction($model, $functionName, $request)
     {
         $controllerName = ucfirst($model) . 'Controller';
         $fullControllerName = 'App\\Http\\Controllers\\' . $controllerName;
         if (class_exists($fullControllerName)) {
             $obj = new $fullControllerName();
             if (method_exists($obj, $functionName)) {
-                $result = call_user_func_array(array($obj, $functionName), ['request'=>$request]);
+                $result = call_user_func_array(array($obj, $functionName), ['request' => $request]);
                 return 1;
             } else {
                 // El método no existe en el controlador

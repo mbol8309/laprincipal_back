@@ -60,9 +60,22 @@
         ]
     },
     {
-        "id": "settings",
-        "label": "Settings",
-        "route": "/setting",
-        "icon": "Settings"
+        "id": "configs",
+        "label": "Configs",
+        "icon": "Settings",
+        "children": [
+            {
+                "id": "settings",
+                "label": "Settings",
+                "route": "/setting",
+                "icon": "Settings"
+            },
+            {
+                "id": "validation_rule",
+                "label": "Reglas Validation",
+                "route": "/validation_rule",
+                "icon": "Rule"
+            }
+        ]
     }
 ]
