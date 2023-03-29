@@ -1,0 +1,52 @@
+{
+    "fields": [
+        {
+            "id":"model_name",
+            "type":"textfield",
+            "label":"Modelo",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id":"field_name",
+            "type":"textfield",
+            "label":"Campo",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id":"rule_name",
+            "type":"textfield",
+            "label":"Regla",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id":"rule_parameters",
+            "type":"textfield",
+            "label":"Parametros",
+            "views": ["list", "show", "edit", "create"]
+        }
+    ],
+    "filters": [
+        {
+            "id":"model_name",
+            "label":"Modelo",
+            "type":"textfield"
+        }
+    ],
+    "views":{
+        "list":{
+            "type":"datagrid",
+            "options":{
+                "rowClick":"show"
+            }
+        },
+        "show":{
+            "type":"simple"
+        },
+        "create":{
+            "type":"simple"
+        },
+        "edit":{
+            "type":"simple"
+        }
+    }
+}

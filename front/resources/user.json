@@ -1,0 +1,57 @@
+{
+    "fields": [
+        {
+            "id": "name",
+            "type": "textfield",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id": "email",
+            "type": "emailfield",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id": "group_id",
+            "type": "reference",
+            "reference": "group",
+            "label": "Group",
+            "sort": true,
+            "empty": "Ninguno",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id": "email_verified_at",
+            "type": "datetimefield",
+            "views": ["list", "show"]
+        },
+        {
+            "id": "created_at",
+            "type": "datetimefield",
+            "views": ["list", "show"]
+        }
+    ],
+    "filters": [
+        {
+            "id":"name",
+            "label":"Name",
+            "type":"textfield"
+        }
+    ],
+    "views":{
+        "list":{
+            "type":"datagrid",
+            "options":{
+                "rowClick":"show"
+            }
+        },
+        "show":{
+            "type":"simple"
+        },
+        "create":{
+            "type":"simple"
+        },
+        "edit":{
+            "type":"simple"
+        }
+    }
+}

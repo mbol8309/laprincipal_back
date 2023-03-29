@@ -1,0 +1,35 @@
+{
+    "fields": [
+        {
+            "id":"name",
+            "type":"textfield",
+            "label":"Nombre",
+            "sort":true,
+            "views": ["list", "show", "edit", "create"]
+        }
+    ],
+    "filters": [
+        {
+            "id":"name",
+            "label":"Name",
+            "type":"textfield"
+        }
+    ],
+    "views":{
+        "list":{
+            "type":"datagrid",
+            "options":{
+                "rowClick":"show"
+            }
+        },
+        "show":{
+            "type":"simple"
+        },
+        "create":{
+            "type":"simple"
+        },
+        "edit":{
+            "type":"simple"
+        }
+    }
+}

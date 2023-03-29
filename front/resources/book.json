@@ -1,0 +1,54 @@
+{
+    "fields": [
+        {
+            "id": "title",
+            "type": "textfield",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id": "author_id",
+            "type": "reference",
+            "reference":"author",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id": "genre",
+            "type": "textfield",
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id": "publication_date",
+            "type": "datefield",
+            "views": ["list", "show", "edit", "create"]
+        }
+    ],
+    "filters": [
+        {
+            "id":"title",
+            "label":"Title",
+            "type":"textfield"
+        },
+        {
+            "id":"author",
+            "label":"Author",
+            "type":"textfield"
+        }
+    ],
+    "views":{
+        "list":{
+            "type":"datagrid",
+            "options":{
+                "rowClick":"show"
+            }
+        },
+        "show":{
+            "type":"simple"
+        },
+        "create":{
+            "type":"simple"
+        },
+        "edit":{
+            "type":"simple"
+        }
+    }
+}

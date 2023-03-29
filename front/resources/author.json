@@ -1,0 +1,60 @@
+{
+    "fields": [
+        {
+            "id": "first_name",
+            "type": "textfield",
+            "label": "Nombre",
+            "sort": true,
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id": "last_name",
+            "type": "textfield",
+            "label": "Apellidos",
+            "sort": true,
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id": "author_id",
+            "type": "reference_many",
+            "reference": "book",
+            "label": "Libros",
+            "render": {
+                "type": "single",
+                "source": "title",
+                "component": "chip"
+            },
+            "sort": true,
+            "views": ["list", "show", "edit", "create"]
+        }
+    ],
+    "filters": [
+        {
+            "id":"first_name",
+            "label":"Name",
+            "type":"textfield"
+        },
+        {
+            "id":"last_name",
+            "label":"Email",
+            "type":"textfield"
+        }
+    ],
+    "views": {
+        "list": {
+            "type": "datagrid",
+            "options": {
+                "rowClick": "show"
+            }
+        },
+        "show": {
+            "type": "simple"
+        },
+        "create": {
+            "type": "simple"
+        },
+        "edit": {
+            "type": "simple"
+        }
+    }
+}
