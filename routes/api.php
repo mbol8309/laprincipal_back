@@ -46,3 +46,4 @@ Route::middleware('auth:sanctum')->group(function(){
 });
 
 Route::get('/front/{item}',[FrontController::class,'show']);
+Route::get('/front',[FrontController::class,'index']);

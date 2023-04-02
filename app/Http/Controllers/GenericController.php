@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
+use ReflectionClass;
 
 class GenericController extends Controller
 {
@@ -346,9 +347,11 @@ class GenericController extends Controller
 
         if (Schema::hasTable('sys_validation_rule')) {
             $rules = [];
+            $reflectionClass = new ReflectionClass($modelName);
             // Obtener las reglas de validación de la tabla 'validation_rules'
+            $short_snake_case_name = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $reflectionClass->getShortName()));
             $validationRules = DB::table('sys_validation_rule')
-                ->where('model_name', '=', get_class($modelName))
+                ->where('model_name', '=', $short_snake_case_name)
                 ->get();
 
             /*dump($validationRules);

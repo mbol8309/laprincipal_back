@@ -34,8 +34,8 @@
         "id": "validation_rule",
         "list":"generic",
         "show":"generic",
-        "edit":"generic",
-        "create":"generic",
+        "edit":"custom",
+        "create":"custom",
         "representation": "${record.model_name}_${record.field_name}_${record.rule_name}"
     },
     {

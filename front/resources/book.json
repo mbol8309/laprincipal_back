@@ -8,6 +8,7 @@
         {
             "id": "author_id",
             "type": "reference",
+            "label":"Author",
             "reference":"author",
             "views": ["list", "show", "edit", "create"]
         },

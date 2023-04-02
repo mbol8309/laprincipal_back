@@ -15,4 +15,16 @@ class FrontController extends Controller
             ]
         ];
     }
+
+    public function index()
+    {
+        $data = config("front");
+
+        return [
+            'data'=>[
+                'id'=>'front',
+                // 'items'=>
+            ]
+        ];
+    }
 }
