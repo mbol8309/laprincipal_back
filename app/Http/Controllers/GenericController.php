@@ -93,6 +93,10 @@ class GenericController extends Controller
         //return response()->json($model);
         $model = $this->GetModelFromRequest($request);
 
+        if ($request->model == 'author'){  //TESTING PURPOSES ONLY
+            $request['with']='books';
+        }
+
         $id = null;
         if ($request->has('id')) {
             $id = $request->id;
