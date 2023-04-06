@@ -26,45 +26,50 @@ class PopulatePermissions extends Command
      */
     public function handle(): void
     {
-        $resources = config('front.resources');
-        $resources = array_map(function ($resource) {
-            return $resource['id'];
-        }, $resources);
-        $permissions_array = ['show', 'edit', 'create', 'delete'];
-        //user resouces permissions
-        $resources_permissions = [];
-        foreach ($resources as $resource) {
-            foreach ($permissions_array as $permission) {
-                $resources_permissions[] = "{$resource}_{$permission}";
-            }
-        }
-        //resources field permissions
-        $fields = [];
-        foreach ($resources as $resource) {
-            $all_data = config("front.resources-{$resource}");
-            if ($all_data == null || !isset($all_data['fields'])) {
+        $all_resources = config('front');
+        $permissions = [];
+        $permissions_crud = ['show', 'edit', 'create', 'delete'];
+
+        foreach ($all_resources as $resource_key => $resource) {
+            [$domain, $area] = explode('-', $resource_key);
+            if ($area == '_sys_menu') { //es un item del menu. Mandy no me lo cambies mas, jejej
+                foreach ($resource as $menu) {
+                    $permissions[] = "{$domain}_{$menu['id']}_menu";
+                    if (isset($menu['children'])) {
+                        $childrens = $menu['children'];
+                        foreach ($childrens as $children) {
+                            $permissions[] = "{$domain}_{$children['id']}_menu";
+                        }
+                    }
+                }
                 continue;
             }
-            $maps = array_map(fn($f)=>"{$resource}_field-{$f['id']}", $all_data['fields']);
-            $fields = array_merge($fields, $maps);
-        }
 
+            if ($area == '_sys_resources') { //es un recurso global
 
-        //menus
-        $menus=config("front.menu");
-        $menu_permissions=[];
-        foreach($menus as $menu){
-            $menu_permissions[] = "{$menu['id']}_menu";
-            if (isset($menu['children'])){
-                $childrens = $menu['children'];
-                foreach($childrens as $children){
-                    $menu_permissions[] = "{$children['id']}_menu";
+                $resources = array_map(function ($resource) {
+                    return $resource['id'];
+                }, $resource);
+
+                //user resouces permissions
+                $resources_permissions = [];
+                foreach ($resources as $resource) {
+                    foreach ($permissions_crud as $permission) {
+                        $permissions[] = "{$domain}_{$resource}_{$permission}";
+                    }
                 }
+                continue;
             }
+            if ($area == "_sys_usermenu") continue; //TODO: Not implemented or thinked how and why
+
+            if ($resource == null || !isset($resource['fields'])) {
+                continue;
+            }
+            $maps = array_map(fn ($f) => "{$domain}_{$area}_field-{$f['id']}", $resource['fields']);
+            $permissions = array_merge($permissions,$maps);
+
+
         }
-
-
-        $permissions = array_merge($fields,$resources_permissions,$menu_permissions);
 
         $created = 0;
 
