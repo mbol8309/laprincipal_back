@@ -27,23 +27,47 @@ class FrontController extends Controller
     public function show(Request $request, string $item)
     {
         $items = config("front.$item");
-
-        $isResource = boolval(strpos($item, "resources-") === 0);
-        $isMenu = boolval($item === "menu");
+        [$domain, $config] = explode('-', $item);
+        $isMenu = boolval($config === "_sys_menu");
+        $isUserMenu = boolval($config === "_sys_usermenu");
+        $isResource = boolval($config === "_sys_resources");
         $user = $this->checkUser($request);
-        $permissions = $user == null ? [] : $user->getPermissionNames()->ToArray();
+        $permissions = $user == null ? [] : $user->getAllPermissions();
 
         //check permissions
         if ($user && $user->id != 1) {
             if ($isMenu) {
-                $items = array_filter($items, function ($item) use ($permissions) {
-                    return in_array("{$item['id']}_menu", $permissions);
+                foreach ($items as $key => $menus) {
+                    if (isset($menus['children'])) {
+                        $items[$key]['children'] = array_filter($menus['children'], function ($child) use ($permissions, $domain) {
+                            return $permissions->where('name', "{$domain}_{$child['id']}_menu")->count() > 0;
+                        });
+                    }
+                }
+
+                $items = array_filter($items, function ($item) use ($permissions, $domain) {
+                    return  !isset($item['children']) || isset($item['children']) && count($item['children']) > 0;
                 });
             }
-
-            if (!$isResource) { //is mayor resource
-
+            if ($isUserMenu) {
+                //something
             }
+
+            if ($isResource) {
+                foreach($items as $key=>$resource)
+                {
+                    $keys = array_keys($resource);
+                    $keys = array_filter($keys, function ($field) use ($permissions, $domain, $resource) {
+                        return $permissions->where('name', "{$domain}_{$resource['id']}_{$field}")->count() > 0;
+                    });
+                    $keys=array_merge(['list','id'],$keys);
+                    $items[$key] = array_intersect_key($resource,array_flip($keys));
+                }
+            }
+
+            // if (!$isResource) { //is mayor resource
+
+            // }
         }
 
         return [

@@ -15,15 +15,11 @@
             "views": ["list", "show", "edit", "create"]
         },
         {
-            "id": "author_id",
-            "type": "reference_many",
+            "id": "books",
+            "type": "arrayfield",
             "reference": "book",
             "label": "Libros",
-            "render": {
-                "type": "single",
-                "source": "title",
-                "component": "chip"
-            },
+            "field":"title",
             "sort": true,
             "views": ["list", "show", "edit", "create"]
         }
@@ -45,10 +41,16 @@
             "type": "datagrid",
             "options": {
                 "rowClick": "show"
+            },
+            "meta":{
+                "with":["books"]
             }
         },
         "show": {
-            "type": "simple"
+            "type": "simple",
+            "meta":{
+                "with":["books"]
+            }
         },
         "create": {
             "type": "simple"

@@ -78,7 +78,7 @@ class PopulatePermissions extends Command
                 $p = new Permission(
                     [
                         'name' => $rp,
-                        'guard' => 'web'
+                        'guard_name' => 'web'
                     ]
                 );
                 $p->save();

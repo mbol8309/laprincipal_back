@@ -33,13 +33,19 @@ class Role extends Model
 		'guard_name'
 	];
 
-	public function model_has_roles()
+	public function model_has_role()
 	{
-		return $this->hasMany(ModelHasRoles::class, 'role_id');
+		return $this->hasMany(ModelHasRole::class, 'role_id');
 	}
 
-	public function role_has_permissions()
+	public function role_has_permission()
 	{
-		return $this->hasMany(RoleHasPermissions::class, 'role_id');
+		return $this->hasMany(RoleHasPermission::class, 'role_id');
 	}
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'sys_role_has_permission','role_id','permission_id');
+    }
+
 }

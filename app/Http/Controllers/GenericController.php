@@ -6,6 +6,7 @@ use App\Models\Libro;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -40,6 +41,7 @@ class GenericController extends Controller
         // Obtener los modelos relacionados a cargar
         if ($request->has('with')) {
             $with = $request->with;
+            if (is_string($with)) $with = [$with];  //to allow passing string
             if (!empty($with)) {
                 foreach ($with as $modelW) {
                     if (method_exists($model, $modelW)) {
@@ -92,10 +94,6 @@ class GenericController extends Controller
     {
         //return response()->json($model);
         $model = $this->GetModelFromRequest($request);
-
-        if ($request->model == 'author'){  //TESTING PURPOSES ONLY
-            $request['with']='books';
-        }
 
         $id = null;
         if ($request->has('id')) {
@@ -251,6 +249,12 @@ class GenericController extends Controller
 
             if ($data != null) {
                 $entity->update($data);
+                foreach ($data as $key => $value) {
+                    // Check if the key corresponds to a many-to-many relation
+                    if (is_array($value) && $entity->$key() instanceof BelongsToMany) {
+                        $entity->$key()->sync($value);
+                    }
+                }
             }
 
             return response()->json(['data' => $entity]);

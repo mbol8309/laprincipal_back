@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class RoleHasPermission extends Model
 {
-	protected $table = 'sys_sys_role_has_permission';
+	protected $table = 'sys_role_has_permission';
 	public $incrementing = false;
 	public $timestamps = false;
 
@@ -30,13 +30,13 @@ class RoleHasPermission extends Model
 		'role_id' => 'int'
 	];
 
-	public function permissions()
+	public function permission()
 	{
-		return $this->belongsTo(Permissions::class, 'permission_id');
+		return $this->belongsTo(Permission::class, 'permission_id');
 	}
 
-	public function roles()
+	public function role()
 	{
-		return $this->belongsTo(Roles::class, 'role_id');
+		return $this->belongsTo(Role::class, 'role_id');
 	}
 }

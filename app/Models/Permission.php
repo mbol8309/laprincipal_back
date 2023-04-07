@@ -35,11 +35,11 @@ class Permission extends Model
 
 	public function model_has_permissions()
 	{
-		return $this->hasMany(ModelHasPermissions::class, 'permission_id');
+		return $this->hasMany(ModelHasPermission::class, 'permission_id');
 	}
 
 	public function role_has_permissions()
 	{
-		return $this->hasMany(RoleHasPermissions::class, 'permission_id');
+		return $this->hasMany(RoleHasPermission::class, 'permission_id');
 	}
 }
