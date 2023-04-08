@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/getByIds',[GenericController::class,'getByIds']);
     Route::post('/updateById',[GenericController::class,'updateById']);
     Route::post('/insert',[GenericController::class,'insert']);
+    Route::post('/delete',[GenericController::class,'delete']);
 });
 
 Route::get('/front/{item}',[FrontController::class,'show']);

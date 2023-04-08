@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -213,9 +214,20 @@ class GenericController extends Controller
             }
             $data = $model->findOrFail($id);
             $data->delete();
-            return response()->json(['message' => 'Resource deleted']);
+            return response()->json([
+                'data'=> $data,
+                'message' => 'Resource deleted']);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Resource not found'], 404);
+        }
+        catch (QueryException $queryException){
+            if ($queryException->getCode()=="23000"){ //integrity contraint
+                return response()->json(['errors'=>["Can't delete, objects depend on this"]],422);
+            }
+            return response()->json(['errors'=>[$queryException->getMessage()]],400);
+        }
+        catch (Exception $e){
+            return response()->json(['errors'=>[$e->getMessage()]],400);
         }
     }
 

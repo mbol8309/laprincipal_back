@@ -19,21 +19,21 @@
             "type": "arrayfield",
             "reference": "book",
             "label": "Libros",
-            "field":"title",
+            "field": "title",
             "sort": true,
             "views": ["list", "show", "edit", "create"]
         }
     ],
     "filters": [
         {
-            "id":"first_name",
-            "label":"Name",
-            "type":"textfield"
+            "id": "first_name",
+            "label": "Name",
+            "type": "textfield"
         },
         {
-            "id":"last_name",
-            "label":"Email",
-            "type":"textfield"
+            "id": "last_name",
+            "label": "Email",
+            "type": "textfield"
         }
     ],
     "views": {
@@ -42,14 +42,34 @@
             "options": {
                 "rowClick": "show"
             },
-            "meta":{
-                "with":["books"]
+            "meta": {
+                "with": ["books"]
+            },
+            "actions": {
+                "global": [
+                    {
+                        "title": "Set Author Top",
+                        "component": "SetTopAuthorAction"
+                    },
+                    {
+                        "title": "Simple Popup",
+                        "component": "SimplePopupAction"
+                    }
+                ],
+                "local":[
+                    {
+                        "title": "Bann author",
+                        "component": "BannAuthorAction",
+                        "icon": "Block",
+                        "color": "secondary"
+                    }
+                ]
             }
         },
         "show": {
             "type": "simple",
-            "meta":{
-                "with":["books"]
+            "meta": {
+                "with": ["books"]
             }
         },
         "create": {
@@ -57,9 +77,10 @@
         },
         "edit": {
             "type": "simple",
-            "meta":{
-                "with":["books"]
+            "meta": {
+                "with": ["books"]
             }
-        }
+        },
+        "delete": {}
     }
 }

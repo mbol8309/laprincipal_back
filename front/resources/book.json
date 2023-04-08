@@ -50,6 +50,7 @@
         },
         "edit":{
             "type":"simple"
-        }
+        },
+        "delete":{}
     }
 }
