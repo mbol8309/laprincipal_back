@@ -6,6 +6,15 @@
             "label":"Nombre",
             "sort":true,
             "views": ["list", "show", "edit", "create"]
+        },
+        {
+            "id":"permissions",
+            "type":"arrayfield",
+            "label":"Permissions",
+            "reference": "permission",
+            "field":"name",
+            "sort":true,
+            "views": ["list", "show", "edit", "create"]
         }
     ],
     "filters": [
@@ -25,16 +34,31 @@
             "type": "datagrid",
             "options": {
                 "rowClick": "show"
+            },
+            "meta":{
+                "with":[
+                    "permissions"
+                ]
             }
         },
         "show": {
-            "type": "simple"
+            "type": "simple",
+            "meta":{
+                "with":[
+                    "permissions"
+                ]
+            }
         },
         "create": {
             "type": "simple"
         },
         "edit": {
-            "type": "simple"
+            "type": "simple",
+            "meta":{
+                "with":[
+                    "permissions"
+                ]
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -253,6 +254,42 @@ class GenericController extends Controller
                     // Check if the key corresponds to a many-to-many relation
                     if (is_array($value) && $entity->$key() instanceof BelongsToMany) {
                         $entity->$key()->sync($value);
+                    }
+
+                    //hasMany
+                    if (is_array($value) &&  $entity->$key() instanceof HasMany) {
+                        $relatedModel = $entity->$key()->getRelated();
+                        $relatedKey = $relatedModel->getKeyName();
+
+                        // Get the IDs of the related models in the request
+                        $relatedIds = $value;
+
+                        // Get the IDs of the related models currently associated with the entity
+                        $currentRelatedIds = $entity->$key->pluck($relatedKey)->toArray();
+
+                        // Determine which related models should be disassociated
+                        $disassociatedIds = array_diff($currentRelatedIds, $relatedIds);
+
+                        // Determine which related models should be associated
+                        $associatedIds = array_diff($relatedIds, $currentRelatedIds);
+
+                        // Disassociate the old related models that are not in the request
+                        $foreignKey = $entity->$key()->getForeignKeyName();
+                        $localKey = $entity->$key()->getLocalKeyName();
+                        if (!empty($disassociatedIds)) {
+                            $relatedModel->whereIn($relatedKey, $disassociatedIds)->update([
+                                $entity->getForeignKey() => null
+                            ]);
+                        }
+
+                        // Associate the new related models that are in the request
+                        if (!empty($associatedIds)) {
+                            $relatedModels = $relatedModel->whereIn($relatedKey, $associatedIds)->get();
+
+                            $relatedModel->whereIn($relatedKey, $associatedIds)->update([
+                                $entity->getForeignKey() => $entity->$localKey
+                            ]);
+                        }
                     }
                 }
             }

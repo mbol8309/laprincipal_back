@@ -56,7 +56,10 @@
             "type": "simple"
         },
         "edit": {
-            "type": "simple"
+            "type": "simple",
+            "meta":{
+                "with":["books"]
+            }
         }
     }
 }
