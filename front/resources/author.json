@@ -64,6 +64,26 @@
                         "icon": "SyncAlt",
                         "color": "secondary",
                         "endpoint":"syncAuthor"
+                    },
+                    {
+                        "title": "Add Notes",
+                        "dialogTitle": "Add note to '${record.first_name}'",
+                        "component": "LocalActionFormEndpoint",
+                        "icon": "Note",
+                        "color": "secondary",
+                        "endpoint":"syncAuthor",
+                        "fields": [
+                            {
+                                "id": "note_title",
+                                "type": "textfield",
+                                "label": "Titulo"
+                            },
+                            {
+                                "id": "note_body",
+                                "type": "richtextfield",
+                                "label": "Cuerpo"
+                            }
+                        ]
                     }
                 ]
             }

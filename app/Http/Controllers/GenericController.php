@@ -217,7 +217,7 @@ class GenericController extends Controller
                 $this->ThrowGenericEx("action not available");
             }
 
-            $this->ThrowGenericEx("Some error");
+
 
             $data = $model->findOrFail($id);
             //do some action with model
