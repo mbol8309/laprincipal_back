@@ -58,10 +58,12 @@
                 ],
                 "local":[
                     {
-                        "title": "Bann author",
-                        "component": "BannAuthorAction",
-                        "icon": "Block",
-                        "color": "secondary"
+                        "title": "Sync",
+                        "dialogTitle": "Sync '${record.first_name}' Author",
+                        "component": "LocalActionEndpoint",
+                        "icon": "SyncAlt",
+                        "color": "secondary",
+                        "endpoint":"syncAuthor"
                     }
                 ]
             }

@@ -204,6 +204,41 @@ class GenericController extends Controller
         //return response()->json(['message' => 'Registro creado con éxito', 'data' => $model], 201);
     }
 
+    public function action(Request $request)
+    {
+        try {
+            $model = $this->GetModelFromRequest($request);
+            $id = $request->has('id') ? $request->id : null;
+            if ($id == null) {
+                $this->ThrowGenericEx("Id is not valid");
+            }
+            $action = $request->has('action') ? $request->action : null;
+            if ($action == null) {
+                $this->ThrowGenericEx("action not available");
+            }
+
+            $this->ThrowGenericEx("Some error");
+
+            $data = $model->findOrFail($id);
+            //do some action with model
+            //TODO do some stuff
+
+            return response()->json([
+                'data' => $data,
+                'message' => "Executed some cute action for model: {$request->model}, $id, $action"
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Resource not found'], 404);
+        } catch (QueryException $queryException) {
+            if ($queryException->getCode() == "23000") { //integrity contraint
+                return response()->json(['errors' => ["Can't delete, objects depend on this"]], 422);
+            }
+            return response()->json(['errors' => [$queryException->getMessage()]], 400);
+        } catch (Exception $e) {
+            return response()->json(['errors' => [$e->getMessage()]], 400);
+        }
+    }
+
     public function delete(Request $request)
     {
         try {
@@ -215,19 +250,18 @@ class GenericController extends Controller
             $data = $model->findOrFail($id);
             $data->delete();
             return response()->json([
-                'data'=> $data,
-                'message' => 'Resource deleted']);
+                'data' => $data,
+                'message' => 'Resource deleted'
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Resource not found'], 404);
-        }
-        catch (QueryException $queryException){
-            if ($queryException->getCode()=="23000"){ //integrity contraint
-                return response()->json(['errors'=>["Can't delete, objects depend on this"]],422);
+        } catch (QueryException $queryException) {
+            if ($queryException->getCode() == "23000") { //integrity contraint
+                return response()->json(['errors' => ["Can't delete, objects depend on this"]], 422);
             }
-            return response()->json(['errors'=>[$queryException->getMessage()]],400);
-        }
-        catch (Exception $e){
-            return response()->json(['errors'=>[$e->getMessage()]],400);
+            return response()->json(['errors' => [$queryException->getMessage()]], 400);
+        } catch (Exception $e) {
+            return response()->json(['errors' => [$e->getMessage()]], 400);
         }
     }
 
