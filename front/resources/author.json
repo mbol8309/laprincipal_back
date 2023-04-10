@@ -47,17 +47,10 @@
             },
             "actions": {
                 "global": [
-                    {
-                        "title": "Set Author Top",
-                        "component": "SetTopAuthorAction"
-                    },
-                    {
-                        "title": "Simple Popup",
-                        "component": "SimplePopupAction"
-                    }
                 ],
                 "local":[
                     {
+                        "id":"sync_author",
                         "title": "Sync",
                         "dialogTitle": "Sync '${record.first_name}' Author",
                         "component": "LocalActionEndpoint",
@@ -66,6 +59,7 @@
                         "endpoint":"syncAuthor"
                     },
                     {
+                        "id":"add_note_author",
                         "title": "Add Notes",
                         "dialogTitle": "Add note to '${record.first_name}'",
                         "component": "LocalActionFormEndpoint",

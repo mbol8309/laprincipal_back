@@ -62,13 +62,36 @@ class PopulatePermissions extends Command
             }
             if ($area == "_sys_usermenu") continue; //TODO: Not implemented or thinked how and why
 
-            if ($resource == null || !isset($resource['fields'])) {
+            if ($resource == null) {
                 continue;
             }
-            $maps = array_map(fn ($f) => "{$domain}_{$area}_field-{$f['id']}", $resource['fields']);
-            $permissions = array_merge($permissions,$maps);
 
+            if (isset($resource['fields'])) {
+                $maps = array_map(fn ($f) => "{$domain}_{$area}_field-{$f['id']}", $resource['fields']);
+                $maps = array_reduce($maps, function ($prev, $curr) {
+                    $prev[] = $curr . "_disable";
+                    $prev[] = $curr . "_hide";
+                    return $prev;
+                }, []);
+                $permissions = array_merge($permissions, $maps);
+            }
+            if (isset($resource['views'])) {
+                $actions_maps=[];
+                $views = $resource['views'];
+                foreach($views as $view){
+                    if(isset($view['actions'])){ //actions
+                        $scopes = $view['actions']; //now global and local
+                        foreach($scopes as $scope_key=>$scope){
+                            foreach($scope as $action){
+                                $actions_maps[] = "{$domain}_{$area}_action_{$scope_key}_{$action['id']}";
+                            }
 
+                        }
+                    }
+
+                }
+                $permissions=array_merge($permissions, $actions_maps);
+            }
         }
 
         $created = 0;
