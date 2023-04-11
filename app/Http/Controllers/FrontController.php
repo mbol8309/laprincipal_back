@@ -31,6 +31,7 @@ class FrontController extends Controller
         $isMenu = boolval($config === "_sys_menu");
         $isUserMenu = boolval($config === "_sys_usermenu");
         $isResource = boolval($config === "_sys_resources");
+        $isResourceData = boolval(!$isMenu && !$isUserMenu && !$isResource);
         $user = $this->checkUser($request);
         $permissions = $user == null ? [] : $user->getAllPermissions();
 
@@ -39,15 +40,16 @@ class FrontController extends Controller
             if ($isMenu) {
                 foreach ($items as $key => $menus) {
                     if (isset($menus['children'])) {
-                        $items[$key]['children'] = array_filter($menus['children'], function ($child) use ($permissions, $domain) {
+                        $children = array_values(array_filter($menus['children'], function ($child) use ($permissions, $domain) { //array_values is called to reset index to 0
                             return $permissions->where('name', "{$domain}_{$child['id']}_menu")->count() > 0;
-                        });
+                        }));
+                        $items[$key]['children'] = $children;
                     }
                 }
 
-                $items = array_filter($items, function ($item) use ($permissions, $domain) {
+                $items = array_values(array_filter($items, function ($item) use ($permissions, $domain) {
                     return  !isset($item['children']) || isset($item['children']) && count($item['children']) > 0;
-                });
+                }));
             }
             if ($isUserMenu) {
                 //something
@@ -57,17 +59,28 @@ class FrontController extends Controller
                 foreach($items as $key=>$resource)
                 {
                     $keys = array_keys($resource);
-                    $keys = array_filter($keys, function ($field) use ($permissions, $domain, $resource) {
+                    $keys = array_values(array_filter($keys, function ($field) use ($permissions, $domain, $resource) {
                         return $permissions->where('name', "{$domain}_{$resource['id']}_{$field}")->count() > 0;
-                    });
+                    }));
                     $keys=array_merge(['list','id'],$keys);
                     $items[$key] = array_intersect_key($resource,array_flip($keys));
                 }
             }
 
-            // if (!$isResource) { //is mayor resource
-
-            // }
+            if ($isResourceData) { //is mayor resource
+                $fields = [];
+                if (isset($items['fields'])){
+                    $fields = array_values(array_filter($items['fields'],function ($field) use($permissions,$domain,$config){
+                        return $permissions->where('name',"{$domain}_{$config}_field-{$field['id']}_hide")->count() == 0;
+                    }));
+                    foreach($fields as $field_key=>$field){
+                        if ($permissions->where('name',"{$domain}_{$config}_field-{$field['id']}_disable")->count() > 0){
+                            $fields[$field_key]['disabled']=true;
+                        }
+                    }
+                }
+                $items['fields']=$fields;
+            }
         }
 
         return [
