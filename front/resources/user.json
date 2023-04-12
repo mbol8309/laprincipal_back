@@ -45,7 +45,37 @@
             }
         },
         "show":{
-            "type":"simple"
+            "type":"simple",
+            "layout": [
+                {
+                    "fields": [
+                        {
+                            "id": "name",
+                            "size": { "xs":12, "sm": 6, "md": 3 }
+                        },
+                        {
+                            "id": "email",
+                            "size": { "xs":12, "sm": 6, "md": 3 }
+                        },
+                        {
+                            "id": "group_id",
+                            "size": { "xs":12, "sm": 12, "md": 6 }
+                        }
+                    ]
+                },
+                {
+                    "fields": [
+                        {
+                            "id": "email_verified_at",
+                            "size": { "xs": 6 }
+                        },
+                        {
+                            "id": "created_at",
+                            "size": { "xs": 6 }
+                        }
+                    ]
+                }
+            ]
         },
         "create":{
             "type":"simple"
