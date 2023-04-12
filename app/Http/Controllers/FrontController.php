@@ -80,6 +80,21 @@ class FrontController extends Controller
                     }
                 }
                 $items['fields']=$fields;
+
+                if (isset($items['views'])){
+                    foreach($items['views'] as $keyView=>$resourceView){
+                        if (isset($resourceView['actions'])){
+                            foreach($resourceView['actions'] as $keyScope=>$resourceScope){
+                                $filtered= array_values(array_filter($resourceScope,function($action) use($domain,$config,$permissions,$keyScope){
+                                    return $permissions->where('name',"{$domain}_{$config}_action_{$keyScope}_{$action['id']}")->count() > 0;
+                                }));
+
+                                $items['views'][$keyView]['actions'][$keyScope] =  $filtered;
+                            }
+                        }
+                    }
+                }
+                $items['fields']=$fields;
             }
         }
 
