@@ -15,6 +15,14 @@
             "views": ["list", "show", "edit", "create"]
         },
         {
+            "id": "image",
+            "type": "filefield",
+            "label": "Image",
+            "sort": true,
+            "count":2,
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
             "id": "books",
             "type": "arrayfield",
             "reference": "book",

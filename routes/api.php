@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\GenericController;
 use App\Http\Controllers\SettingsController;
@@ -45,6 +46,11 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/insert',[GenericController::class,'insert']);
     Route::post('/delete',[GenericController::class,'delete']);
     Route::post('/action',[GenericController::class,'action']);
+
+    Route::prefix('/file')->group(function(){
+        Route::post('/upload', [FileController::class,'upload']);
+        Route::post('/getAll', [FileController::class,'getAll']);
+    });
 });
 
 Route::get('/front/{item}',[FrontController::class,'show']);
