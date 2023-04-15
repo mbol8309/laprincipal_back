@@ -91,11 +91,11 @@ class Thumbnailer
         }
 
         // borders
-        $color = imagecolorallocatealpha($image, 80, 80, 80, 0);
-        imageline($image, 0, 0, $imageWidth-1, 0, $color);
-        imageline($image, $imageWidth-1, 0, $imageWidth-1, $imageHeight-1, $color);
-        imageline($image, 0, $imageHeight-1, $imageWidth-1, $imageHeight-1, $color);
-        imageline($image, 0, 0, 0, $imageHeight-1, $color);
+        // $color = imagecolorallocatealpha($image, 80, 80, 80, 0);
+        // imageline($image, 0, 0, $imageWidth-1, 0, $color);
+        // imageline($image, $imageWidth-1, 0, $imageWidth-1, $imageHeight-1, $color);
+        // imageline($image, 0, $imageHeight-1, $imageWidth-1, $imageHeight-1, $color);
+        // imageline($image, 0, 0, 0, $imageHeight-1, $color);
 
         // Save the image to a PNG file
         $thumbnailPath = 'thumbnails/' . Str::random(40) . '.png';
