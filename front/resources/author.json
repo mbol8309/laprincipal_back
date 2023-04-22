@@ -1,6 +1,17 @@
 {
     "fields": [
         {
+            "id": "avatar",
+            "type": "filefield",
+            "label": "Avatar",
+            "count": 1,
+            "filetype": "image",
+            "maxWidth":600,
+            "maxHeight":600,
+            "sort": true,
+            "views": ["list", "show", "edit", "create"]
+        },
+        {
             "id": "first_name",
             "type": "textfield",
             "label": "Nombre",
@@ -15,12 +26,13 @@
             "views": ["list", "show", "edit", "create"]
         },
         {
-            "id": "image",
+            "id": "curriculum",
             "type": "filefield",
-            "label": "Image",
+            "label": "Curriculum",
             "sort": true,
+            "filetype":"pdf",
             "count":2,
-            "views": ["list", "show", "edit", "create"]
+            "views": [ "show", "edit", "create"]
         },
         {
             "id": "books",
