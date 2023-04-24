@@ -195,6 +195,7 @@ class GenericController extends Controller
             $model->fill($data);
             //dump($model);exit;
             $model->save();
+            $this->updateRelations($model, $data);
         }
 
         return response()->json([
@@ -202,6 +203,52 @@ class GenericController extends Controller
             'success' => true
         ]);
         //return response()->json(['message' => 'Registro creado con éxito', 'data' => $model], 201);
+    }
+
+    private function updateRelations($model, $data)
+    {
+        foreach ($data as $key => $value) {
+            // Check if the key corresponds to a many-to-many relation
+            if (is_array($value) && $model->$key() instanceof BelongsToMany) {
+                $model->$key()->sync($value);
+            }
+
+            //hasMany
+            if (is_array($value) &&  $model->$key() instanceof HasMany) {
+                $relatedModel = $model->$key()->getRelated();
+                $relatedKey = $relatedModel->getKeyName();
+
+                // Get the IDs of the related models in the request
+                $relatedIds = $value;
+
+                // Get the IDs of the related models currently associated with the entity
+                $currentRelatedIds = $model->$key->pluck($relatedKey)->toArray();
+
+                // Determine which related models should be disassociated
+                $disassociatedIds = array_diff($currentRelatedIds, $relatedIds);
+
+                // Determine which related models should be associated
+                $associatedIds = array_diff($relatedIds, $currentRelatedIds);
+
+                // Disassociate the old related models that are not in the request
+                $foreignKey = $model->$key()->getForeignKeyName();
+                $localKey = $model->$key()->getLocalKeyName();
+                if (!empty($disassociatedIds)) {
+                    $relatedModel->whereIn($relatedKey, $disassociatedIds)->update([
+                        $model->getForeignKey() => null
+                    ]);
+                }
+
+                // Associate the new related models that are in the request
+                if (!empty($associatedIds)) {
+                    $relatedModels = $relatedModel->whereIn($relatedKey, $associatedIds)->get();
+
+                    $relatedModel->whereIn($relatedKey, $associatedIds)->update([
+                        $model->getForeignKey() => $model->$localKey
+                    ]);
+                }
+            }
+        }
     }
 
     public function action(Request $request)
@@ -296,48 +343,7 @@ class GenericController extends Controller
 
             if ($data != null) {
                 $entity->update($data);
-                foreach ($data as $key => $value) {
-                    // Check if the key corresponds to a many-to-many relation
-                    if (is_array($value) && $entity->$key() instanceof BelongsToMany) {
-                        $entity->$key()->sync($value);
-                    }
-
-                    //hasMany
-                    if (is_array($value) &&  $entity->$key() instanceof HasMany) {
-                        $relatedModel = $entity->$key()->getRelated();
-                        $relatedKey = $relatedModel->getKeyName();
-
-                        // Get the IDs of the related models in the request
-                        $relatedIds = $value;
-
-                        // Get the IDs of the related models currently associated with the entity
-                        $currentRelatedIds = $entity->$key->pluck($relatedKey)->toArray();
-
-                        // Determine which related models should be disassociated
-                        $disassociatedIds = array_diff($currentRelatedIds, $relatedIds);
-
-                        // Determine which related models should be associated
-                        $associatedIds = array_diff($relatedIds, $currentRelatedIds);
-
-                        // Disassociate the old related models that are not in the request
-                        $foreignKey = $entity->$key()->getForeignKeyName();
-                        $localKey = $entity->$key()->getLocalKeyName();
-                        if (!empty($disassociatedIds)) {
-                            $relatedModel->whereIn($relatedKey, $disassociatedIds)->update([
-                                $entity->getForeignKey() => null
-                            ]);
-                        }
-
-                        // Associate the new related models that are in the request
-                        if (!empty($associatedIds)) {
-                            $relatedModels = $relatedModel->whereIn($relatedKey, $associatedIds)->get();
-
-                            $relatedModel->whereIn($relatedKey, $associatedIds)->update([
-                                $entity->getForeignKey() => $entity->$localKey
-                            ]);
-                        }
-                    }
-                }
+                $this->updateRelations($entity, $data);
             }
 
             return response()->json(['data' => $entity]);
